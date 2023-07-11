@@ -24,10 +24,10 @@ public class RecommendsController {
     private RecommendsRepository recommendsRepository;
 
     @PostMapping("/animes")
-    public ResponseEntity<RecommendsModel> saveAnime(@RequestBody @Valid RecommendsRecordDto recommendsRecordDto) {
-        var recommendsModelValor = new RecommendsModel();
-        BeanUtils.copyProperties(recommendsRecordDto, recommendsModelValor);
-        return ResponseEntity.status(HttpStatus.CREATED).body(recommendsModelValor);
+    public ResponseEntity<RecommendsModel> saveRecommends(@RequestBody @Valid RecommendsRecordDto recommendsRecordDto) {
+        var AnimeSave = new RecommendsModel();
+        BeanUtils.copyProperties(recommendsRecordDto, AnimeSave);
+        return ResponseEntity.status(HttpStatus.CREATED).body(AnimeSave);
     }
 
     @GetMapping("/animes")
@@ -38,7 +38,7 @@ public class RecommendsController {
     }
 
     @GetMapping("/animes/{id}")
-    public ResponseEntity<Object> GetOneRecommends(@PathVariable(value = "id")UUID id,
+    public ResponseEntity<Object> getOneRecommends(@PathVariable(value = "id")UUID id,
                                                    @RequestBody @Valid RecommendsRecordDto recommendsRecordDto) {
         Optional<RecommendsModel> AnimeId = recommendsRepository.findById(id);
         if (AnimeId.isEmpty()) {
@@ -49,7 +49,7 @@ public class RecommendsController {
     }
 
     @PutMapping("/animes/{id}")
-    public ResponseEntity<Object> UpdateRecommends(@PathVariable(value = "id")UUID id,
+    public ResponseEntity<Object> updateRecommends(@PathVariable(value = "id")UUID id,
                                                    @Valid RecommendsRecordDto recommendsRecordDto) {
         Optional<RecommendsModel> AnimeId = recommendsRepository.findById(id);
         if (AnimeId.isEmpty()) {
@@ -58,6 +58,17 @@ public class RecommendsController {
         var animeModel = AnimeId.get();
         BeanUtils.copyProperties(recommendsRecordDto, animeModel);
         return ResponseEntity.status(HttpStatus.OK).body(recommendsRepository.save(animeModel));
+    }
+
+    @DeleteMapping("/animes/{id}")
+    public ResponseEntity<Object> deleteRecommends(@PathVariable(value = "id")UUID id) {
+
+        Optional<RecommendsModel> AnimeDelete = recommendsRepository.findById(id);
+        if (AnimeDelete.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Anime not found.");
+        }
+        recommendsRepository.delete(AnimeDelete.get());
+        return ResponseEntity.status(HttpStatus.OK).body("Anime deleted successfully.");
     }
 
 }
