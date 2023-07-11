@@ -10,12 +10,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @AllArgsConstructor
@@ -33,9 +32,20 @@ public class RecommendsController {
 
     @GetMapping("/animes")
     public ResponseEntity<List<RecommendsModel>> getAllRecommends(){
-        List<RecommendsModel> recommendsModelList = recommendsRepository.findAll();
+        List<RecommendsModel> AnimeList = recommendsRepository.findAll();
 
-        return  ResponseEntity.status(HttpStatus.OK).body(recommendsModelList);
+        return  ResponseEntity.status(HttpStatus.OK).body(AnimeList);
+    }
+
+    @GetMapping("/animes/{id}")
+    public ResponseEntity<Object> GetOneRecommends(@PathVariable(value = "id")UUID id,
+                                                   @RequestBody @Valid RecommendsRecordDto recommendsRecordDto) {
+        Optional<RecommendsModel> AnimeId = recommendsRepository.findById(id);
+        if (AnimeId.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Anime not found.");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(AnimeId.get());
     }
 
 
