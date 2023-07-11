@@ -48,5 +48,16 @@ public class RecommendsController {
         return ResponseEntity.status(HttpStatus.OK).body(AnimeId.get());
     }
 
+    @PutMapping("/animes/{id}")
+    public ResponseEntity<Object> UpdateRecommends(@PathVariable(value = "id")UUID id,
+                                                   @Valid RecommendsRecordDto recommendsRecordDto) {
+        Optional<RecommendsModel> AnimeId = recommendsRepository.findById(id);
+        if (AnimeId.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Anime not found.");
+        }
+        var animeModel = AnimeId.get();
+        BeanUtils.copyProperties(recommendsRecordDto, animeModel);
+        return ResponseEntity.status(HttpStatus.OK).body(recommendsRepository.save(animeModel));
+    }
 
 }
