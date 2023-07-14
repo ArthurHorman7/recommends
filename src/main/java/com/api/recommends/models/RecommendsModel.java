@@ -4,10 +4,8 @@ package com.api.recommends.models;
         import lombok.AllArgsConstructor;
         import lombok.Data;
         import lombok.NoArgsConstructor;
-        import org.springframework.hateoas.RepresentationModel;
 
         import java.io.Serializable;
-        import java.math.BigDecimal;
         import java.util.UUID;
 
 @Entity
@@ -15,19 +13,18 @@ package com.api.recommends.models;
 @NoArgsConstructor
 @Data
 @Table(name = "TB_ANIMES")
-public class RecommendsModel extends RepresentationModel<RecommendsModel> implements Serializable {
+public class RecommendsModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private UUID idProduct;
+    private UUID idAnime;
 
     @Column(nullable = false)
     private String name;
 
-    @Lob
     @Column(nullable = false)
-    private byte[] image;
+    private String image;
 
     @Column(nullable = false)
     private String author;
@@ -42,5 +39,5 @@ public class RecommendsModel extends RepresentationModel<RecommendsModel> implem
     private String description;
 
     @Column(nullable = false)
-    private BigDecimal rating;
+    private Float rating;
 }

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,14 +21,13 @@ import java.util.UUID;
 @AllArgsConstructor
 public class RecommendsController {
 
-    @Autowired
-    private RecommendsRepository recommendsRepository;
+    private final RecommendsRepository recommendsRepository;
 
     @PostMapping("/animes")
     public ResponseEntity<RecommendsModel> saveRecommends(@RequestBody @Valid RecommendsRecordDto recommendsRecordDto) {
         var AnimeSave = new RecommendsModel();
         BeanUtils.copyProperties(recommendsRecordDto, AnimeSave);
-        return ResponseEntity.status(HttpStatus.CREATED).body(AnimeSave);
+        return ResponseEntity.status(HttpStatus.CREATED).body(recommendsRepository.save(AnimeSave));
     }
 
     @GetMapping("/animes")
