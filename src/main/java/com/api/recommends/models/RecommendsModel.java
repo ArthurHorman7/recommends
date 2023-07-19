@@ -18,7 +18,7 @@ public class RecommendsModel implements Serializable {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private UUID idAnime;
+    private UUID id;
 
     @Column(nullable = false)
     private String name;
@@ -35,7 +35,7 @@ public class RecommendsModel implements Serializable {
     @Column(nullable = false)
     private String genre;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 400)
     private String description;
 
     @Column(nullable = false)

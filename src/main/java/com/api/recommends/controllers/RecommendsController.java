@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@CrossOrigin(maxAge = 3600)
 @RestController
 @AllArgsConstructor
 public class RecommendsController {
@@ -38,8 +39,7 @@ public class RecommendsController {
     }
 
     @GetMapping("/animes/{id}")
-    public ResponseEntity<Object> getOneRecommends(@PathVariable(value = "id")UUID id,
-                                                   @RequestBody @Valid RecommendsRecordDto recommendsRecordDto) {
+    public ResponseEntity<Object> getOneRecommends(@PathVariable(value = "id")UUID id) {
         Optional<RecommendsModel> AnimeId = recommendsRepository.findById(id);
         if (AnimeId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Anime not found.");
@@ -50,7 +50,7 @@ public class RecommendsController {
 
     @PutMapping("/animes/{id}")
     public ResponseEntity<Object> updateRecommends(@PathVariable(value = "id")UUID id,
-                                                   @Valid RecommendsRecordDto recommendsRecordDto) {
+                                                   @RequestBody @Valid RecommendsRecordDto recommendsRecordDto) {
         Optional<RecommendsModel> AnimeId = recommendsRepository.findById(id);
         if (AnimeId.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Anime not found.");
