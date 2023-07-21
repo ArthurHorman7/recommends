@@ -3,6 +3,7 @@ package com.api.recommends.controllers;
 import com.api.recommends.dtos.RecommendsRecordDto;
 import com.api.recommends.models.RecommendsModel;
 import com.api.recommends.repositories.RecommendsRepository;
+import com.api.recommends.services.RecommendsService;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,8 @@ import java.util.UUID;
 public class RecommendsController {
 
     private final RecommendsRepository recommendsRepository;
+    private final RecommendsService recommendsService;
+
 
     @PostMapping("/animes")
     public ResponseEntity<RecommendsModel> saveRecommends(@RequestBody @Valid RecommendsRecordDto recommendsRecordDto) {
@@ -38,7 +41,7 @@ public class RecommendsController {
         return  ResponseEntity.status(HttpStatus.OK).body(AnimeList);
     }
 
-    @GetMapping("/animes/{id}")
+    @GetMapping("/animes/id/{id}")
     public ResponseEntity<Object> getOneRecommends(@PathVariable(value = "id")UUID id) {
         Optional<RecommendsModel> AnimeId = recommendsRepository.findById(id);
         if (AnimeId.isEmpty()) {
@@ -46,6 +49,16 @@ public class RecommendsController {
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(AnimeId.get());
+    }
+
+    @GetMapping("/animes/name/{name}")
+    public ResponseEntity<Object> getOneRecommendsForName(@PathVariable(value = "name") String name) {
+        Optional<RecommendsModel> AnimeName = recommendsRepository.findByImage(name);
+        if (AnimeName.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Anime not found.");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(AnimeName.get());
     }
 
     @PutMapping("/animes/{id}")
