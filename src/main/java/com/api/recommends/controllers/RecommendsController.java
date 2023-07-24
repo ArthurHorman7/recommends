@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -53,7 +54,8 @@ public class RecommendsController {
 
     @GetMapping("/animes/name/{name}")
     public ResponseEntity<Object> getOneRecommendsForName(@PathVariable(value = "name") String name) {
-        Optional<RecommendsModel> AnimeName = recommendsRepository.findByImage(name);
+        var imageName = Normalizer.normalize(String.format("%s.jpg", name.toLowerCase().replace(' ', '-')), Normalizer.Form.NFD).replaceAll("[^\\p{ASCII}]", "");
+        Optional<RecommendsModel> AnimeName = recommendsRepository.findByImage(imageName);
         if (AnimeName.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Anime not found.");
         }
